@@ -21,4 +21,6 @@ public interface DAO {
     void deleteAllPatients();
     @Query("SELECT * FROM patients_table")
     LiveData<List<Entity>> getAllPatients();
+//    @Query("UPDATE patients_table SET name = :sName WHERE ID = :sID")
+//    void update(int sID, String sName);
 }

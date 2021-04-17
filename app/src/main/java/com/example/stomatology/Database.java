@@ -8,7 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@androidx.room.Database(entities = Entity.class, version = 1)
+@androidx.room.Database(entities = {Entity.class}, version = 1)
 public abstract class Database extends RoomDatabase {
     private static Database instance;
     public abstract DAO dao();
@@ -36,7 +36,8 @@ public abstract class Database extends RoomDatabase {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            dao.insert(new Entity("name 1", "1", "1", "address 1", "1", "1", "1"));
+            dao.insert(new Entity("name 3", "3", "3", "address 2", "2", "2", "2"));
+            dao.insert(new Entity("name 4", "1", "1", "address 1", "1", "1", "1"));
             dao.insert(new Entity("name 2", "2", "2", "address 2", "2", "2", "2"));
             return null;
         }
