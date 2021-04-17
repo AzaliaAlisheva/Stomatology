@@ -27,10 +27,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Form extends AppCompatActivity {
     public static final String TAG = "Form";
-    DatabaseHelper mDatabaseHelper;
 
     private DatePickerDialog pickerD;
     private TimePickerDialog pickerT;
@@ -43,8 +43,6 @@ public class Form extends AppCompatActivity {
     private TextInputEditText age;
     private TextInputEditText address;
     private TextInputEditText diagnostics;
-    private TextInputEditText date;
-    private TextInputEditText time;
 
 
     @Override
@@ -113,38 +111,22 @@ public class Form extends AppCompatActivity {
                 if (new_name.equals("")) {
                     Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();
                 }else {
-                    AddData(new_name);
-                    Intent intent = new Intent(Form.this, MainActivity.class);
-                    startActivity(intent);
-                }
-//                if (new_name.equals("")) {
-//                    Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();
-//                }else {
-//                    Toast.makeText(getBaseContext(), "Клиент добавлен", Toast.LENGTH_SHORT).show();
-//                    Intent r_intent = new Intent();
-//                    r_intent.putExtra("EXTRA_NAME", new_name);
-//                    r_intent.putExtra("EXTRA_PHONE", new_phone);
-//                    r_intent.putExtra("EXTRA_AGE", new_age);
-//                    r_intent.putExtra("EXTRA_ADDRESS", new_address);
-//                    r_intent.putExtra("EXTRA_DIAGNOSTICS", new_diagnostics);
-//                    r_intent.putExtra("EXTRA_DATE", new_date);
-//                    r_intent.putExtra("EXTRA_TIME", new_time);
-//                    setResult(RESULT_OK, r_intent);
-//                    finish();
-//                 }
+                    Toast.makeText(getBaseContext(), "Клиент добавлен", Toast.LENGTH_SHORT).show();
+                    Intent r_intent = new Intent();
+                    r_intent.putExtra("EXTRA_NAME", new_name);
+                    r_intent.putExtra("EXTRA_PHONE", new_phone);
+                    r_intent.putExtra("EXTRA_AGE", new_age);
+                    r_intent.putExtra("EXTRA_ADDRESS", new_address);
+                    r_intent.putExtra("EXTRA_DIAGNOSTICS", new_diagnostics);
+                    r_intent.putExtra("EXTRA_DATE", new_date);
+                    r_intent.putExtra("EXTRA_TIME", new_time);
+                    setResult(RESULT_OK, r_intent);
+                    finish();
+                 }
             }
         });
 
         
-    }
-
-    public void AddData(String newEntry) {
-        boolean insertData = mDatabaseHelper.addData(newEntry);
-        if (insertData) {
-            Toast.makeText(getBaseContext(), "Клиент добавлен", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getBaseContext(), "Что-то пошло не так", Toast.LENGTH_SHORT).show();
-        }
     }
 
 }
