@@ -29,6 +29,7 @@ public abstract class Database extends RoomDatabase {
             new PopulateDbAsynkTask(instance).execute();
         }
     };
+
     private static class PopulateDbAsynkTask extends AsyncTask<Void, Void, Void> {
         private DAO dao;
         private PopulateDbAsynkTask(Database db) {

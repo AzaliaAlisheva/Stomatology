@@ -31,12 +31,26 @@ import java.util.Locale;
 
 public class Form extends AppCompatActivity {
     public static final String TAG = "Form";
+    public static final String EXTRA_ID =
+            "com.example.stomatology.EXTRA_ID";
+    public static final String EXTRA_NAME =
+            "com.example.stomatology.EXTRA_NAME";
+    public static final String EXTRA_PHONE =
+            "com.example.stomatology.EXTRA_PHONE";
+    public static final String EXTRA_AGE =
+            "com.example.stomatology.EXTRA_AGE";
+    public static final String EXTRA_ADDRESS =
+            "com.example.stomatology.EXTRA_ADDRESS";
+    public static final String EXTRA_DIAGNOSTICS =
+            "com.example.stomatology.EXTRA_DIAGNOSTICS";
+    public static final String EXTRA_DATE =
+            "com.example.stomatology.EXTRA_DATE";
+    public static final String EXTRA_TIME =
+            "com.example.stomatology.EXTRA_TIME";
 
     private DatePickerDialog pickerD;
     private TimePickerDialog pickerT;
-    private TextInputLayout dater;
     private TextInputEditText editD;
-    private TextInputLayout timer;
     private TextInputEditText editT;
     private TextInputEditText name;
     private TextInputEditText phone;
@@ -44,15 +58,12 @@ public class Form extends AppCompatActivity {
     private TextInputEditText address;
     private TextInputEditText diagnostics;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        setTitle("Карточка клиента");
-
-        dater = findViewById(R.id.filledTextField_date);
+        TextInputLayout dater = findViewById(R.id.filledTextField_date);
         editD = findViewById(R.id.editionDate);
         dater.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +84,7 @@ public class Form extends AppCompatActivity {
             }
         });
 
-        timer = findViewById(R.id.filledTextField_time);
+        TextInputLayout timer = findViewById(R.id.filledTextField_time);
         editT = findViewById(R.id.editionTime);
         timer.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,41 +103,66 @@ public class Form extends AppCompatActivity {
                 pickerT.show();
             }
         });
-        name = findViewById(R.id.name_Editor);
+
+        name = findViewById(R.id.name_Editor); //INPUT?
         phone = findViewById(R.id.phone_Editor);
         age = findViewById(R.id.age_Editor);
         address = findViewById(R.id.address_Editor);
         diagnostics = findViewById(R.id.diagnostics_Editor);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)) { //ЗАЧЕМ ТОГДА EDIT_REQUEST?
+            setTitle("Редактирование");
+            name.setText(intent.getStringExtra(EXTRA_NAME));
+            phone.setText(intent.getStringExtra(EXTRA_PHONE));
+            age.setText(intent.getStringExtra(EXTRA_AGE));
+            address.setText(intent.getStringExtra(EXTRA_ADDRESS));
+            diagnostics.setText(intent.getStringExtra(EXTRA_DIAGNOSTICS));
+            editD.setText(intent.getStringExtra(EXTRA_DATE));
+            editT.setText(intent.getStringExtra(EXTRA_TIME));
+        } else {
+            setTitle("Карточка клиента");
+        }
+
+
         Button saver = (Button) findViewById(R.id.save_button);
         saver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String new_name = name.getText().toString();
-                String new_phone = phone.getText().toString();
-                String new_age = age.getText().toString();
-                String new_address = address.getText().toString();
-                String new_diagnostics = diagnostics.getText().toString();
-                String new_date = editD.getText().toString();
-                String new_time = editD.getText().toString();
-                if (new_name.equals("")) {
-                    Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(getBaseContext(), "Клиент добавлен", Toast.LENGTH_SHORT).show();
-                    Intent r_intent = new Intent();
-                    r_intent.putExtra("EXTRA_NAME", new_name);
-                    r_intent.putExtra("EXTRA_PHONE", new_phone);
-                    r_intent.putExtra("EXTRA_AGE", new_age);
-                    r_intent.putExtra("EXTRA_ADDRESS", new_address);
-                    r_intent.putExtra("EXTRA_DIAGNOSTICS", new_diagnostics);
-                    r_intent.putExtra("EXTRA_DATE", new_date);
-                    r_intent.putExtra("EXTRA_TIME", new_time);
-                    setResult(RESULT_OK, r_intent);
-                    finish();
-                 }
+                saveEntity();
             }
         });
+    }
 
-        
+    private void saveEntity() {
+        String new_name = name.getText().toString();
+        String new_phone = phone.getText().toString();
+        String new_age = age.getText().toString();
+        String new_address = address.getText().toString();
+        String new_diagnostics = diagnostics.getText().toString();
+        String new_date = editD.getText().toString();
+        String new_time = editD.getText().toString();
+
+        if (new_name.trim().isEmpty()) {
+            Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_NAME, new_name);
+        intent.putExtra(EXTRA_PHONE, new_phone);
+        intent.putExtra(EXTRA_AGE, new_age);
+        intent.putExtra(EXTRA_ADDRESS, new_address);
+        intent.putExtra(EXTRA_DIAGNOSTICS, new_diagnostics);
+        intent.putExtra(EXTRA_DATE, new_date);
+        intent.putExtra(EXTRA_TIME, new_time);
+
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id != -1) {
+            intent.putExtra(EXTRA_ID, id);
+        }
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }

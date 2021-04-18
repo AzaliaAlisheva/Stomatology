@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,18 +34,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity{
-    //public static final int ADD_REQUEST = 1;
+    public static final int ADD_REQUEST = 1;
+    public static final int EDIT_REQUEST = 2;
     private ViewModel newVM;
-//    private ListView listview;
-//    public ArrayList <String> arrayList;
-//    public ArrayAdapter<String> adapter;
-//    EditText Search;
-
+    EditText Search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar);
+        //FLOATING BUTTON
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Form.class);
+                startActivityForResult(intent, ADD_REQUEST);
+            }
+        });
+        // ELEMENTS FROM DATABASE
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -56,34 +64,34 @@ public class MainActivity extends AppCompatActivity{
         newVM.getAllEntities().observe(this, new Observer<List<Entity>>() {
             @Override
             public void onChanged(@Nullable List<Entity> entities) {
-                //update Recycle
                 adapter.setEntities(entities);
             }
         });
+        //ITEM CLICK LISTENER
+        adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Entity entity) {
+                Intent intent = new Intent(MainActivity.this, AboutPatient.class);
+                intent.putExtra(Form.EXTRA_ID, entity.getId());
+                intent.putExtra(Form.EXTRA_NAME, entity.getName());
+                intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
+                intent.putExtra(Form.EXTRA_AGE, entity.getAge());
+                intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
+                intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
+                intent.putExtra(Form.EXTRA_DATE, entity.getDate());
+                intent.putExtra(Form.EXTRA_TIME, entity.getTime());
+                startActivityForResult(intent, EDIT_REQUEST);
+            }
+        });
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, Form.class);
-//                startActivityForResult(intent, ADD_REQUEST);
-//            }
-//        });
-//        String[] items = {};
-//
-//        listview = (ListView) findViewById(R.id.listview);
 //        Search = (EditText) findViewById(R.id.input);
-//        arrayList = new ArrayList<>(Arrays.asList(items));
-//        adapter = new ArrayAdapter<>(this, R.layout.item, R.id.item,
-//                arrayList);
-//        listview.setAdapter(adapter);
 //        Search.addTextChangedListener(new TextWatcher() {
 //
 //            @Override
 //            public void onTextChanged(CharSequence cs, int arg1, int arg2,
 //                                      int arg3) {
 //                // When user changed the Text
-//                MainActivity.this.adapter.getFilter().filter(cs);
+//                MainActivity.this.EntityAdapter.getFilter().filter(cs);
 //            }
 //
 //            @Override
@@ -106,23 +114,24 @@ public class MainActivity extends AppCompatActivity{
 //            }
 //        });
 //    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == ADD_REQUEST) {
-//            if (resultCode == RESULT_OK) {
-//                String new_name = data.getStringExtra("EXTRA_NAME");
-//                String new_phone = data.getStringExtra("EXTRA_PHONE");
-//                String new_age = data.getStringExtra("EXTRA_AGE");
-//                String new_address = data.getStringExtra("EXTRA_ADDRESS");
-//                String new_diagnostics = data.getStringExtra("EXTRA_DIAGNOSTICS");
-//                String new_date = data.getStringExtra("EXTRA_DATE");
-//                String new_time = data.getStringExtra("EXTRA_TIME");
-//                Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
-//                newVM.insert(entity);
-//                arrayList.add(new_name);
+    }
+    // GET NEW ELEMENT
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // ADDING
+        if (requestCode == ADD_REQUEST && resultCode == RESULT_OK) {
+            String new_name = data.getStringExtra(Form.EXTRA_NAME);
+            String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
+            String new_age = data.getStringExtra(Form.EXTRA_AGE);
+            String new_address = data.getStringExtra(Form.EXTRA_ADDRESS);
+            String new_diagnostics = data.getStringExtra(Form.EXTRA_DIAGNOSTICS);
+            String new_date = data.getStringExtra(Form.EXTRA_DATE);
+            String new_time = data.getStringExtra(Form.EXTRA_TIME);
+            Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
+            newVM.insert(entity);
+            Toast.makeText(this, "Клиент добавлен", Toast.LENGTH_SHORT).show();
+            //                arrayList.add(new_name);
 //                Collections.sort(arrayList, new Comparator<String>() {
 //                    @Override
 //                    public int compare(String o1, String o2) {
@@ -130,7 +139,27 @@ public class MainActivity extends AppCompatActivity{
 //                    }
 //                });
 //                adapter.notifyDataSetChanged();
-//            }
-//        }
+        // EDITING
+        }else if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK) {
+            int id = data.getIntExtra(Form.EXTRA_ID, -1);
+            if (id == -1) {
+                Toast.makeText(this, "Отклонено", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String new_name = data.getStringExtra(Form.EXTRA_NAME);
+            String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
+            String new_age = data.getStringExtra(Form.EXTRA_AGE);
+            String new_address = data.getStringExtra(Form.EXTRA_ADDRESS);
+            String new_diagnostics = data.getStringExtra(Form.EXTRA_DIAGNOSTICS);
+            String new_date = data.getStringExtra(Form.EXTRA_DATE);
+            String new_time = data.getStringExtra(Form.EXTRA_TIME);
+
+            Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
+            entity.setId(id);
+            newVM.update(entity);
+            Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_SHORT).show();
+        }
     }
 }

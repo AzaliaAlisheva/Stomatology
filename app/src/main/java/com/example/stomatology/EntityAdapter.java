@@ -9,11 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.EntityHolder>{
     private List<Entity> entities = new ArrayList<>();
+    private OnItemClickListener listener;
+
     @NonNull
     @Override
     public EntityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,7 +36,6 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.EntityHold
 //        holder.textViewDiagnostics.setText(currentEntity.getDiagnostics());
 //        holder.textViewDate.setText(currentEntity.getDate());
 //        holder.textViewTime.setText(currentEntity.getTime());
-
     }
 
     @Override
@@ -43,6 +46,10 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.EntityHold
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
         notifyDataSetChanged();
+    }
+
+    public Entity getEntityAt(int position) {
+        return entities.get(position);
     }
 
     class EntityHolder extends RecyclerView.ViewHolder {
@@ -57,12 +64,24 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.EntityHold
         public EntityHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.item);
-//            textViewPhone = itemView.findViewById(R.id.filledTextField_phone);
-//            textViewAge = itemView.findViewById(R.id.filledTextField_age);
-//            textViewAddress = itemView.findViewById(R.id.filledTextField_address);
-//            textViewDiagnostics = itemView.findViewById(R.id.filledTextField_diagnostics);
-//            textViewDate = itemView.findViewById(R.id.filledTextField_date);
-//            textViewTime = itemView.findViewById(R.id.filledTextField_time);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(entities.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Entity entity);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

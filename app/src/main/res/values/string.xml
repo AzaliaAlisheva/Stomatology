@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cliently</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки</string>
     <string name="hello_world">Hello world!</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
     <string name="name_hint">ФИО</string>
     <string name="address_hint">Адрес</string>
     <string name="age_hint">Возраст</string>
@@ -14,4 +14,5 @@
     <string name="time_hint">Время сеанса</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
 </resources>

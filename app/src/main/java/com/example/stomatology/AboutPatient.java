@@ -7,44 +7,60 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 public class AboutPatient extends AppCompatActivity {
-//    public static final String TAG = "AboutPatient";
-//    private  Button btnSave, btnDelete;
-//    Database Database;
-//    private String selectedName;
-//    private int selectedID;
-//    private EditText editable_item;
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_about_patient);
-//        btnSave = (Button) findViewById(R.id.save_button);
-//        btnDelete = (Button) findViewById(R.id.editTextField_name);
-//        editable_item = (EditText) findViewById(R.id.name_Editor);
-//        Database = new Database(this);
-//        Intent receivedIntent = getIntent();
-//        selectedID = receivedIntent.getIntExtra("id", -1);
-//        selectedName = receivedIntent.getStringExtra("name");
-//        editable_item.setText(selectedName);
-//        btnSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String item = editable_item.getText().toString();
-//                if(!item.equals("")) {
-//                    Database.updateName(item, selectedID, selectedName);
-//                }else{
-//                    //you must enter a name
-//                }
-//            }
-//        });
-//        btnDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Database.deleteName(selectedID, selectedName);
-//                editable_item.setText("");
-//                //removed from database
-//            }
-//        });
-//    }
+    public static final String TAG = "AboutPatient";
+    public static final int EDIT_REQUEST = 2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about_patient);
+        Button btnEdit = (Button) findViewById(R.id.edit_button);
+        Button btnDelete = (Button) findViewById(R.id.delete_button);
+        TextView name = (TextView) findViewById(R.id.viewTextField_name);
+        TextView phone = (TextView) findViewById(R.id.viewTextField_phone);
+        TextView age = (TextView) findViewById(R.id.viewTextField_age);
+        TextView address = (TextView) findViewById(R.id.viewTextField_address);
+        TextView diagnostics = (TextView) findViewById(R.id.viewTextField_diagnostics);
+        TextView date = (TextView) findViewById(R.id.viewTextField_date);
+        TextView time = (TextView) findViewById(R.id.viewTextField_time);
+
+        Intent receivedIntent = getIntent();
+        final int selectedID = receivedIntent.getIntExtra(Form.EXTRA_ID, -1);
+        final String selectedName = receivedIntent.getStringExtra(Form.EXTRA_NAME);
+        final String selectedPhone = receivedIntent.getStringExtra(Form.EXTRA_PHONE);
+        final String selectedAge = receivedIntent.getStringExtra(Form.EXTRA_AGE);
+        final String selectedAddress = receivedIntent.getStringExtra(Form.EXTRA_ADDRESS);
+        final String selectedDiagnostics = receivedIntent.getStringExtra(Form.EXTRA_DIAGNOSTICS);
+        final String selectedDate = receivedIntent.getStringExtra(Form.EXTRA_DATE);
+        final String selectedTime = receivedIntent.getStringExtra(Form.EXTRA_TIME);
+
+        name.setText(selectedName);
+        phone.setText(selectedPhone);
+        age.setText(selectedAge);
+        address.setText(selectedAddress);
+        diagnostics.setText(selectedDiagnostics);
+        date.setText(selectedDate);
+        time.setText(selectedTime);
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AboutPatient.this, Form.class);
+                intent.putExtra(Form.EXTRA_ID, selectedID);
+                intent.putExtra(Form.EXTRA_NAME, selectedName);
+                intent.putExtra(Form.EXTRA_PHONE, selectedPhone);
+                intent.putExtra(Form.EXTRA_AGE, selectedAge);
+                intent.putExtra(Form.EXTRA_ADDRESS, selectedAddress);
+                intent.putExtra(Form.EXTRA_DIAGNOSTICS, selectedDiagnostics);
+                intent.putExtra(Form.EXTRA_DATE, selectedDate);
+                intent.putExtra(Form.EXTRA_TIME, selectedTime);
+                startActivityForResult(intent, EDIT_REQUEST);
+            }
+        });
+    }
 }

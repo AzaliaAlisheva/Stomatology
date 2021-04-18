@@ -10,6 +10,7 @@ import java.util.List;
 public class Repository {
     private DAO dao;
     private LiveData<List<Entity>> allEntities;
+
     public Repository(Application application) {
         Database db = Database.getInstance(application);
         dao =  db.dao();
@@ -75,7 +76,7 @@ public class Repository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            dao.deleteAllPatients();
+            dao.deleteAllEntities();
             return null;
         }
     }
