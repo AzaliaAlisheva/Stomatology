@@ -34,15 +34,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity{
+    public static final String TAG = "MainActivity";
     public static final int ADD_REQUEST = 1;
     public static final int EDIT_REQUEST = 2;
     private ViewModel newVM;
+    private ListView mListView;
     EditText Search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar);
+        mListView = (ListView) findViewById(R.id.listview);
+        populateListView();
         //FLOATING BUTTON
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,22 +69,6 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onChanged(@Nullable List<Entity> entities) {
                 adapter.setEntities(entities);
-            }
-        });
-        //ITEM CLICK LISTENER
-        adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Entity entity) {
-                Intent intent = new Intent(MainActivity.this, AboutPatient.class);
-                intent.putExtra(Form.EXTRA_ID, entity.getId());
-                intent.putExtra(Form.EXTRA_NAME, entity.getName());
-                intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
-                intent.putExtra(Form.EXTRA_AGE, entity.getAge());
-                intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
-                intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
-                intent.putExtra(Form.EXTRA_DATE, entity.getDate());
-                intent.putExtra(Form.EXTRA_TIME, entity.getTime());
-                startActivityForResult(intent, EDIT_REQUEST);
             }
         });
 
@@ -115,6 +103,46 @@ public class MainActivity extends AppCompatActivity{
 //        });
 //    }
     }
+
+    private void populateListView() {
+        Log.d(TAG, "populateListView: Displaying data in the ListView.");
+        Cursor data = mDatabaseHelper.getData();
+        ArrayList<String> listData = new ArrayList<>();
+        while (data.moveToNext()) {
+            listData.add(data.getString(1));
+        }
+        ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.item, listData);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "onItemClick: You Clicked on" + name);
+                Cursor data = mDatabaseHelper.getItemID(name);
+                int itemID = -1;
+                while(data.moveToNext()) {
+                    itemID = data.getInt(0);
+                }
+                if (itemID > -1) {
+                    Log.d(TAG, "onItemClick: The ID is: " + itemID);
+                    Entity entity = getEntityById(itemID);
+                    Intent intent = new Intent(MainActivity.this, AboutPatient.class);
+                    intent.putExtra(Form.EXTRA_ID, entity.getId());
+                    intent.putExtra(Form.EXTRA_NAME, entity.getName());
+                    intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
+                    intent.putExtra(Form.EXTRA_AGE, entity.getAge());
+                    intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
+                    intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
+                    intent.putExtra(Form.EXTRA_DATE, entity.getDate());
+                    intent.putExtra(Form.EXTRA_TIME, entity.getTime());
+                    startActivityForResult(intent, EDIT_REQUEST);
+                }else{
+                    Toast.makeText(MainActivity.this, "В базе клиента нет", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     // GET NEW ELEMENT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -60,7 +60,6 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.EntityHold
 //        private TextView textViewDiagnostics;
 //        private TextView textViewDate;
 //        private TextView textViewTime;
-
         public EntityHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.item);
