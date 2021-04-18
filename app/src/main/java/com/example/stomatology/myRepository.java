@@ -1,37 +1,44 @@
 package com.example.stomatology;
-
 import android.app.Application;
+import android.database.Cursor;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
-
-import java.util.List;
-
-public class Repository {
+public class myRepository {
     private DAO dao;
-    private LiveData<List<Entity>> allEntities;
 
-    public Repository(Application application) {
-        Database db = Database.getInstance(application);
+    public myRepository(Application application) {
+        myDatabase db = myDatabase.getInstance(application);
         dao =  db.dao();
-        allEntities = dao.getAllPatients();
-
     }
+
     public void insert(Entity entity) {
         new InsertAsyncTask(dao).execute(entity);
     }
+
     public void update(Entity entity) {
         new UpdateAsyncTask(dao).execute(entity);
     }
+
     public void delete(Entity entity) {
         new DeleteAsyncTask(dao).execute(entity);
     }
+
     public void deleteAll() {
         new DeleteAllAT(dao).execute();
     }
-    public LiveData<List<Entity>> getAllEntities() {
-        return allEntities;
+
+    public Entity getByID(int ID) {
+        return dao.getById(ID);
     }
+
+    public Cursor getId(String name) {
+        return dao.getId(name);
+    }
+
+    public Cursor getAll() {
+        return dao.getAll();
+    }
+
     private static class InsertAsyncTask extends AsyncTask<Entity, Void, Void> {
         private DAO dao;
         private InsertAsyncTask(DAO dao) {
@@ -44,6 +51,7 @@ public class Repository {
             return null;
         }
     }
+
     private static class UpdateAsyncTask extends AsyncTask<Entity, Void, Void> {
         private DAO dao;
         private UpdateAsyncTask(DAO dao) {
@@ -56,6 +64,7 @@ public class Repository {
             return null;
         }
     }
+
     private static class DeleteAsyncTask extends AsyncTask<Entity, Void, Void> {
         private DAO dao;
         private DeleteAsyncTask(DAO dao) {
@@ -68,6 +77,7 @@ public class Repository {
             return null;
         }
     }
+
     private static class DeleteAllAT extends AsyncTask<Void, Void, Void> {
         private DAO dao;
         private DeleteAllAT (DAO dao) {

@@ -57,7 +57,8 @@
             android:layout_weight="50"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+            style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_marginEnd="16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/age_Editor"
                 android:layout_width="match_parent"
@@ -135,7 +136,8 @@
             app:endIconMode="custom"
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
-            style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+            style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_marginEnd="16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editionTime"
                 android:layout_width="match_parent"

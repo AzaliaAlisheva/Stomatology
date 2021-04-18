@@ -1,33 +1,17 @@
 package com.example.stomatology;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class Form extends AppCompatActivity {
     public static final String TAG = "Form";
@@ -72,7 +56,6 @@ public class Form extends AppCompatActivity {
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
                 pickerD = new DatePickerDialog(Form.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -92,7 +75,6 @@ public class Form extends AppCompatActivity {
                 final Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int minute = c.get(Calendar.MINUTE);
-                // date picker dialog
                 pickerT = new TimePickerDialog(Form.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -123,7 +105,6 @@ public class Form extends AppCompatActivity {
         } else {
             setTitle("Карточка клиента");
         }
-
 
         Button saver = (Button) findViewById(R.id.save_button);
         saver.setOnClickListener(new View.OnClickListener() {

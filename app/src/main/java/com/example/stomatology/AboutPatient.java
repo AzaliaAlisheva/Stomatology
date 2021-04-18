@@ -1,15 +1,10 @@
 package com.example.stomatology;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.android.material.textfield.TextInputEditText;
 
 public class AboutPatient extends AppCompatActivity {
     public static final String TAG = "AboutPatient";
@@ -19,15 +14,16 @@ public class AboutPatient extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_patient);
+
         Button btnEdit = (Button) findViewById(R.id.edit_button);
         Button btnDelete = (Button) findViewById(R.id.delete_button);
-        TextView name = (TextView) findViewById(R.id.viewTextField_name);
-        TextView phone = (TextView) findViewById(R.id.viewTextField_phone);
-        TextView age = (TextView) findViewById(R.id.viewTextField_age);
-        TextView address = (TextView) findViewById(R.id.viewTextField_address);
-        TextView diagnostics = (TextView) findViewById(R.id.viewTextField_diagnostics);
-        TextView date = (TextView) findViewById(R.id.viewTextField_date);
-        TextView time = (TextView) findViewById(R.id.viewTextField_time);
+        TextView name = (TextView) findViewById(R.id.name_Editor);
+        TextView phone = (TextView) findViewById(R.id.phone_Editor);
+        TextView age = (TextView) findViewById(R.id.age_Editor);
+        TextView address = (TextView) findViewById(R.id.address_Editor);
+        TextView diagnostics = (TextView) findViewById(R.id.diagnostics_Editor);
+        TextView date = (TextView) findViewById(R.id.editionDate);
+        TextView time = (TextView) findViewById(R.id.editionTime);
 
         Intent receivedIntent = getIntent();
         final int selectedID = receivedIntent.getIntExtra(Form.EXTRA_ID, -1);

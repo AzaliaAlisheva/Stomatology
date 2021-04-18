@@ -25,5 +25,9 @@
             android:name=".Form"
             android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
+        <activity
+            android:name=".AboutPatient"
+            android:parentActivityName=".MainActivity"
+            tools:targetApi="jelly_bean" />
     </application>
 </manifest>

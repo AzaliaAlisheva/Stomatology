@@ -1,5 +1,4 @@
 package com.example.stomatology;
-
 import androidx.room.PrimaryKey;
 
 @androidx.room.Entity(tableName = "patients_table")

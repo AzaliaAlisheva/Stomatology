@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/viewTextField_name"
+        android:id="@+id/filledTextField_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
@@ -18,6 +18,13 @@
         app:boxCornerRadiusTopStart="16dp"
         android:hint="@string/name_hint"
         style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_Editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:longClickable="false"
+            android:cursorVisible="false"/>
     </com.google.android.material.textfield.TextInputLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +32,7 @@
         android:weightSum="100"
         android:baselineAligned="false">
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/viewTextField_phone"
+            android:id="@+id/filledTextField_phone"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:hint="@string/phone_hint"
@@ -37,10 +44,17 @@
             app:boxCornerRadiusTopStart="16dp"
             style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             app:startIconDrawable="@drawable/ic_phone">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone_Editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:longClickable="false"
+                android:cursorVisible="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/viewTextField_age"
+            android:id="@+id/filledTextField_age"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:hint="@string/age_hint"
@@ -51,10 +65,17 @@
             app:boxCornerRadiusTopStart="16dp"
             style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_marginEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/age_Editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:longClickable="false"
+                android:cursorVisible="false"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/viewTextField_address"
+        android:id="@+id/filledTextField_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/address_hint"
@@ -65,10 +86,17 @@
         app:boxCornerRadiusTopEnd="16dp"
         app:boxCornerRadiusTopStart="16dp"
         style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/address_Editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:longClickable="false"
+            android:cursorVisible="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/viewTextField_diagnostics"
+        android:id="@+id/filledTextField_diagnostics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/diagnostics_hint"
@@ -78,6 +106,13 @@
         app:boxCornerRadiusTopEnd="16dp"
         app:boxCornerRadiusTopStart="16dp"
         style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/diagnostics_Editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:longClickable="false"
+            android:cursorVisible="false"/>
     </com.google.android.material.textfield.TextInputLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,7 +120,7 @@
         android:weightSum="100"
         android:baselineAligned="false">
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/viewTextField_date"
+            android:id="@+id/filledTextField_date"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:hint="@string/date_hint"
@@ -98,10 +133,17 @@
             app:boxCornerRadiusTopEnd="16dp"
             app:boxCornerRadiusTopStart="16dp"
             style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editionDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:longClickable="false"
+                android:cursorVisible="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/viewTextField_time"
+            android:id="@+id/filledTextField_time"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:hint="@string/time_hint"
@@ -114,18 +156,28 @@
             app:boxCornerRadiusTopStart="16dp"
             style = "@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_marginEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editionTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:longClickable="false"
+                android:cursorVisible="false"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        style="?android:attr/buttonBarStyle">
+
         <Button
             android:id="@+id/edit_button"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:padding="16dp"
-            android:text="@string/edit" />
+            android:text="@string/edit"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/delete_button"
@@ -133,6 +185,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:padding="16dp"
-            android:text="@string/delete" />
+            android:text="@string/delete"
+            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 </LinearLayout>
