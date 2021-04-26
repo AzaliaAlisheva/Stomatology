@@ -1,9 +1,12 @@
 package com.example.stomatology;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -41,6 +44,7 @@ public class Form extends AppCompatActivity {
     private TextInputEditText age;
     private TextInputEditText address;
     private TextInputEditText diagnostics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +133,7 @@ public class Form extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(Form.this,AboutPatient.class);
         intent.putExtra(EXTRA_NAME, new_name);
         intent.putExtra(EXTRA_PHONE, new_phone);
         intent.putExtra(EXTRA_AGE, new_age);
@@ -142,6 +146,7 @@ public class Form extends AppCompatActivity {
         if (id != -1) {
             intent.putExtra(EXTRA_ID, id);
         }
+
         setResult(RESULT_OK, intent);
         finish();
     }

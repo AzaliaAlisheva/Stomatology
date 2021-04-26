@@ -1,33 +1,73 @@
 package com.example.stomatology;
 import android.app.Application;
 import android.database.Cursor;
-import android.os.AsyncTask;
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class myRepository {
     private DAO dao;
+    private LiveData<List<Entity>> entities;
+
 
     public myRepository(Application application) {
         myDatabase db = myDatabase.getInstance(application);
         dao =  db.dao();
+        entities = dao.getAll();
+
     }
 
-    public void insert(Entity entity) {
-        new InsertAsyncTask(dao).execute(entity);
+    LiveData<List<Entity>> getAllEntities() {
+        return entities;
     }
 
-    public void update(Entity entity) {
-        new UpdateAsyncTask(dao).execute(entity);
+    public void insert(final Entity entity) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.insert(entity);
+            }
+        });
+        executorService.shutdown();
     }
 
-    public void delete(Entity entity) {
-        new DeleteAsyncTask(dao).execute(entity);
+    public void update(final Entity entity) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.update(entity);
+            }
+        });
+        executorService.shutdown();
+    }
+
+    public void delete(final Entity entity) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.delete(entity);
+            }
+        });
+        executorService.shutdown();
     }
 
     public void deleteAll() {
-        new DeleteAllAT(dao).execute();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.deleteAllEntities();
+            }
+        });
+        executorService.shutdown();
     }
 
-    public Entity getByID(int ID) {
+    public LiveData<Entity> getByID(int ID) {
         return dao.getById(ID);
     }
 
@@ -35,59 +75,4 @@ public class myRepository {
         return dao.getId(name);
     }
 
-    public Cursor getAll() {
-        return dao.getAll();
-    }
-
-    private static class InsertAsyncTask extends AsyncTask<Entity, Void, Void> {
-        private DAO dao;
-        private InsertAsyncTask(DAO dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Entity... entities) {
-            dao.insert(entities[0]);
-            return null;
-        }
-    }
-
-    private static class UpdateAsyncTask extends AsyncTask<Entity, Void, Void> {
-        private DAO dao;
-        private UpdateAsyncTask(DAO dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Entity... entities) {
-            dao.update(entities[0]);
-            return null;
-        }
-    }
-
-    private static class DeleteAsyncTask extends AsyncTask<Entity, Void, Void> {
-        private DAO dao;
-        private DeleteAsyncTask(DAO dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Entity... entities) {
-            dao.delete(entities[0]);
-            return null;
-        }
-    }
-
-    private static class DeleteAllAT extends AsyncTask<Void, Void, Void> {
-        private DAO dao;
-        private DeleteAllAT (DAO dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dao.deleteAllEntities();
-            return null;
-        }
-    }
 }

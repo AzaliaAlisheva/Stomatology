@@ -9,20 +9,28 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.List;
+
 @Dao
 public interface DAO {
     @Insert
     void insert(Entity entity);
+
     @Update
     void update(Entity entity);
+
     @Delete
     void delete(Entity entity);
+
     @Query("DELETE FROM patients_table")
     void deleteAllEntities();
+
     @Query("SELECT * FROM patients_table WHERE ID = :id")
-    Entity getById (int id);
+    LiveData<Entity> getById (int id);
+
     @Query("SELECT * FROM patients_table WHERE NAME = :name")
     Cursor getId (String name);
+
     @Query("SELECT * FROM patients_table")
-    Cursor getAll();
+    LiveData<List<Entity>> getAll();
 }

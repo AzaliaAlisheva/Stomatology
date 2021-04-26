@@ -1,7 +1,11 @@
 package com.example.stomatology;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,21 +13,23 @@ import android.widget.TextView;
 public class AboutPatient extends AppCompatActivity {
     public static final String TAG = "AboutPatient";
     public static final int EDIT_REQUEST = 2;
+    private TextView name, phone, age, address, diagnostics, date, time;
+    private ViewMyModel newVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_patient);
-
-        Button btnEdit = (Button) findViewById(R.id.edit_button);
-        Button btnDelete = (Button) findViewById(R.id.delete_button);
-        TextView name = (TextView) findViewById(R.id.name_Editor);
-        TextView phone = (TextView) findViewById(R.id.phone_Editor);
-        TextView age = (TextView) findViewById(R.id.age_Editor);
-        TextView address = (TextView) findViewById(R.id.address_Editor);
-        TextView diagnostics = (TextView) findViewById(R.id.diagnostics_Editor);
-        TextView date = (TextView) findViewById(R.id.editionDate);
-        TextView time = (TextView) findViewById(R.id.editionTime);
+        Button btnEdit = findViewById(R.id.edit_button);
+        Button btnDelete = findViewById(R.id.delete_button);
+        name = findViewById(R.id.name_Editor);
+        phone = findViewById(R.id.phone_Editor);
+        age = findViewById(R.id.age_Editor);
+        address = findViewById(R.id.address_Editor);
+        diagnostics = findViewById(R.id.diagnostics_Editor);
+        date = findViewById(R.id.editionDate);
+        time = findViewById(R.id.editionTime);
+        newVM = ViewModelProviders.of(this).get(ViewMyModel.class);
 
         Intent receivedIntent = getIntent();
         final int selectedID = receivedIntent.getIntExtra(Form.EXTRA_ID, -1);
@@ -48,7 +54,7 @@ public class AboutPatient extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AboutPatient.this, Form.class);
                 intent.putExtra(Form.EXTRA_ID, selectedID);
-                intent.putExtra(Form.EXTRA_NAME, selectedName);
+                intent.putExtra(Form.EXTRA_NAME, name.getText().toString());
                 intent.putExtra(Form.EXTRA_PHONE, selectedPhone);
                 intent.putExtra(Form.EXTRA_AGE, selectedAge);
                 intent.putExtra(Form.EXTRA_ADDRESS, selectedAddress);
@@ -58,5 +64,18 @@ public class AboutPatient extends AppCompatActivity {
                 startActivityForResult(intent, EDIT_REQUEST);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+            if (resultCode == RESULT_OK) {
+                String name_from_edit = data.getStringExtra(Form.EXTRA_NAME);
+                name.setText(name_from_edit);
+                Log.d("RRR",name_from_edit);
+
+            }
+
     }
 }

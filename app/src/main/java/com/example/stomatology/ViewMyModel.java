@@ -3,16 +3,21 @@ import android.app.Application;
 import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
 
 public class ViewMyModel extends AndroidViewModel {
     private myRepository rep;
+    private LiveData<List<Entity>> entities;
 
     public ViewMyModel(@NonNull Application application) {
         super(application);
         rep = new myRepository(application);
+        entities = updateEntityList();
     }
 
-    public void insert(Entity entity) {
+    public void insert(Entity entity) throws InterruptedException {
         rep.insert(entity);
     }
 
@@ -28,7 +33,7 @@ public class ViewMyModel extends AndroidViewModel {
         rep.deleteAll();
     }
 
-    public Entity getById(int ID) {
+    public LiveData<Entity> getById(int ID) {
         return rep.getByID(ID);
     }
 
@@ -36,7 +41,14 @@ public class ViewMyModel extends AndroidViewModel {
         return rep.getId(name);
     }
 
-    public Cursor getAll() {
-        return rep.getAll();
+    public LiveData<List<Entity>> getAllEntity() {
+        if (entities == null){
+            entities = updateEntityList();
+        }
+        return entities;
+    }
+
+    public LiveData<List<Entity>> updateEntityList(){
+        return rep.getAllEntities();
     }
 }

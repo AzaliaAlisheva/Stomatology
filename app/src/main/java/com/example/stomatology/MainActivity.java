@@ -1,6 +1,10 @@
 package com.example.stomatology;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     public static final String TAG = "MainActivity";
@@ -20,6 +25,8 @@ public class MainActivity extends AppCompatActivity{
     public static final int EDIT_REQUEST = 2;
     private ViewMyModel newVM;
     private ListView mListView;
+    private EntityAdapter adapter;
+    static ArrayList<Entity> list = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,17 +41,23 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(intent, ADD_REQUEST);
             }
         });
-        mListView = (ListView) findViewById(R.id.listview);
+        mListView = findViewById(R.id.listview);
         newVM = ViewModelProviders.of(this).get(ViewMyModel.class);
         // ELEMENTS FROM DATABASE
         populateListView();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("RRR",position+"");
+                loadFirst(position+1);
+            }
+        });
     }
-    // GET NEW ELEMENT
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // ADDING
-        if (requestCode == ADD_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == MainActivity.ADD_REQUEST && resultCode == MainActivity.RESULT_OK) {
             String new_name = data.getStringExtra(Form.EXTRA_NAME);
             String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
             String new_age = data.getStringExtra(Form.EXTRA_AGE);
@@ -53,10 +66,14 @@ public class MainActivity extends AppCompatActivity{
             String new_date = data.getStringExtra(Form.EXTRA_DATE);
             String new_time = data.getStringExtra(Form.EXTRA_TIME);
             Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
-            newVM.insert(entity);
+            try {
+                newVM.insert(entity);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Toast.makeText(this, "Клиент добавлен", Toast.LENGTH_SHORT).show();
-        // EDITING
-        }else if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK) {
+        }
+        if (requestCode == MainActivity.EDIT_REQUEST) {
             int id = data.getIntExtra(Form.EXTRA_ID, -1);
             if (id == -1) {
                 Toast.makeText(this, "Отклонено", Toast.LENGTH_SHORT).show();
@@ -72,49 +89,42 @@ public class MainActivity extends AppCompatActivity{
 
             Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
             entity.setId(id);
-            newVM.update(entity);
+             newVM.update(entity);
             Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_SHORT).show();
+
         }
+
     }
 
     private void populateListView() {
         Log.d(TAG, "populateListView: Displaying data in the ListView.");
-        Cursor data = newVM.getAll();
-        ArrayList<String> listData = new ArrayList<>();
-        while (data.moveToNext()) {
-            listData.add(data.getString(1));
-        }
-        ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.item, listData);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        newVM.getAllEntity().observe(this, new Observer<List<Entity>>() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String name = adapterView.getItemAtPosition(i).toString();
-                Log.d(TAG, "onItemClick: You Clicked on" + name);
-                Cursor data = newVM.getId(name);
-                int entityID = -1;
-                while(data.moveToNext()) {
-                    entityID = data.getInt(0);
+            public void onChanged(@Nullable List<Entity> entities) {
+                if(entities != null) {
+                    adapter = new EntityAdapter(getApplicationContext(),  entities);
+                    mListView.setAdapter(adapter);
                 }
-                if (entityID > -1) {
-                    Log.d(TAG, "onItemClick: The ID is: " + entityID);
-                    Entity entity = newVM.getById(entityID);
-                    Intent intent = new Intent(MainActivity.this, AboutPatient.class);
-                    intent.putExtra(Form.EXTRA_ID, entity.getId());
-                    intent.putExtra(Form.EXTRA_NAME, entity.getName());
-                    intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
-                    intent.putExtra(Form.EXTRA_AGE, entity.getAge());
-                    intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
-                    intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
-                    intent.putExtra(Form.EXTRA_DATE, entity.getDate());
-                    intent.putExtra(Form.EXTRA_TIME, entity.getTime());
-                    startActivityForResult(intent, EDIT_REQUEST);
-                }else{
-                    Toast.makeText(MainActivity.this, "В базе клиента нет", Toast.LENGTH_SHORT).show();
-                }
+                adapter.notifyDataSetChanged();
             }
         });
+    }
+    private void loadFirst(int i) {
+        newVM.getById(i).observe(this, new Observer<Entity>() {
+            @Override
+            public void onChanged(Entity entity) {
+                Intent intent = new Intent(MainActivity.this, AboutPatient.class);
+                intent.putExtra(Form.EXTRA_ID, entity.getId());
+                intent.putExtra(Form.EXTRA_NAME, entity.getName());
+                intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
+                intent.putExtra(Form.EXTRA_AGE, entity.getAge());
+                intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
+                intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
+                intent.putExtra(Form.EXTRA_DATE, entity.getDate());
+                intent.putExtra(Form.EXTRA_TIME, entity.getTime());
+                startActivityForResult(intent, MainActivity.EDIT_REQUEST);
+            }
+        });
+
     }
 }
