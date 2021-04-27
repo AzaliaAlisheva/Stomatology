@@ -14,7 +14,7 @@ public class myRepository {
 
     public myRepository(Application application) {
         myDatabase db = myDatabase.getInstance(application);
-        dao =  db.dao();
+        dao = db.dao();
         entities = dao.getAll();
 
     }
@@ -74,5 +74,4 @@ public class myRepository {
     public Cursor getId(String name) {
         return dao.getId(name);
     }
-
 }

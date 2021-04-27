@@ -53,6 +53,7 @@ public class AboutPatient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AboutPatient.this, Form.class);
+                Log.d("ID_AboutPatient", selectedID+"");
                 intent.putExtra(Form.EXTRA_ID, selectedID);
                 intent.putExtra(Form.EXTRA_NAME, name.getText().toString());
                 intent.putExtra(Form.EXTRA_PHONE, selectedPhone);
@@ -61,21 +62,12 @@ public class AboutPatient extends AppCompatActivity {
                 intent.putExtra(Form.EXTRA_DIAGNOSTICS, selectedDiagnostics);
                 intent.putExtra(Form.EXTRA_DATE, selectedDate);
                 intent.putExtra(Form.EXTRA_TIME, selectedTime);
-                startActivityForResult(intent, EDIT_REQUEST);
+                //startActivityForResult(intent, EDIT_REQUEST);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//It makes sure that you cannot go back to the previous activity with the BACK button
+                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                startActivity(intent);
+                finish(); // Call once you redirect to another activity
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-            if (resultCode == RESULT_OK) {
-                String name_from_edit = data.getStringExtra(Form.EXTRA_NAME);
-                name.setText(name_from_edit);
-                Log.d("RRR",name_from_edit);
-
-            }
-
     }
 }

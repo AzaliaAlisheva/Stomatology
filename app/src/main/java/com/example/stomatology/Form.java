@@ -141,8 +141,8 @@ public class Form extends AppCompatActivity {
         intent.putExtra(EXTRA_DIAGNOSTICS, new_diagnostics);
         intent.putExtra(EXTRA_DATE, new_date);
         intent.putExtra(EXTRA_TIME, new_time);
-
         int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        Log.d("ID_FORM", id+"");
         if (id != -1) {
             intent.putExtra(EXTRA_ID, id);
         }

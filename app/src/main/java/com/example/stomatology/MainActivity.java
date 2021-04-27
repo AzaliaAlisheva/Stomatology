@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity{
     private ViewMyModel newVM;
     private ListView mListView;
     private EntityAdapter adapter;
-    static ArrayList<Entity> list = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,9 +40,9 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(intent, ADD_REQUEST);
             }
         });
+        //LIST VIEW
         mListView = findViewById(R.id.listview);
         newVM = ViewModelProviders.of(this).get(ViewMyModel.class);
-        // ELEMENTS FROM DATABASE
         populateListView();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MainActivity.ADD_REQUEST && resultCode == MainActivity.RESULT_OK) {
+            //Зачем так много считывать? Нужно только имя, а entity там добавим
             String new_name = data.getStringExtra(Form.EXTRA_NAME);
             String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
             String new_age = data.getStringExtra(Form.EXTRA_AGE);
@@ -73,25 +73,27 @@ public class MainActivity extends AppCompatActivity{
             }
             Toast.makeText(this, "Клиент добавлен", Toast.LENGTH_SHORT).show();
         }
-        if (requestCode == MainActivity.EDIT_REQUEST) {
+        if (requestCode == MainActivity.EDIT_REQUEST && resultCode == MainActivity.RESULT_OK) {
             int id = data.getIntExtra(Form.EXTRA_ID, -1);
-            if (id == -1) {
+            Log.d("ID_MAIN", id+"");
+            if (id != -1) {
+                String new_name = data.getStringExtra(Form.EXTRA_NAME);
+                Log.d("RRR", new_name);
+                //Зачем так много считывать? Нужно только имя, а entity там в db добавим
+                String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
+                String new_age = data.getStringExtra(Form.EXTRA_AGE);
+                String new_address = data.getStringExtra(Form.EXTRA_ADDRESS);
+                String new_diagnostics = data.getStringExtra(Form.EXTRA_DIAGNOSTICS);
+                String new_date = data.getStringExtra(Form.EXTRA_DATE);
+                String new_time = data.getStringExtra(Form.EXTRA_TIME);
+
+                Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
+                entity.setId(id);
+                newVM.update(entity);
+                Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
+            }else{
                 Toast.makeText(this, "Отклонено", Toast.LENGTH_SHORT).show();
-                return;
             }
-            String new_name = data.getStringExtra(Form.EXTRA_NAME);
-            String new_phone = data.getStringExtra(Form.EXTRA_PHONE);
-            String new_age = data.getStringExtra(Form.EXTRA_AGE);
-            String new_address = data.getStringExtra(Form.EXTRA_ADDRESS);
-            String new_diagnostics = data.getStringExtra(Form.EXTRA_DIAGNOSTICS);
-            String new_date = data.getStringExtra(Form.EXTRA_DATE);
-            String new_time = data.getStringExtra(Form.EXTRA_TIME);
-
-            Entity entity = new Entity(new_name, new_phone, new_age, new_address, new_diagnostics, new_date, new_time);
-            entity.setId(id);
-             newVM.update(entity);
-            Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show();
-
         }
 
     }
