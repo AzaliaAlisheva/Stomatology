@@ -126,7 +126,7 @@ public class Form extends AppCompatActivity {
         String new_address = address.getText().toString();
         String new_diagnostics = diagnostics.getText().toString();
         String new_date = editD.getText().toString();
-        String new_time = editD.getText().toString();
+        String new_time = editT.getText().toString();
 
         if (new_name.trim().isEmpty()) {
             Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();

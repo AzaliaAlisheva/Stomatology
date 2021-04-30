@@ -3,20 +3,26 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
@@ -24,8 +30,9 @@ public class MainActivity extends AppCompatActivity{
     public static final int ADD_REQUEST = 1;
     public static final int EDIT_REQUEST = 2;
     private ViewMyModel newVM;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private EntityAdapter adapter;
+    EditText Search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,14 +48,30 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         //LIST VIEW
-        mListView = findViewById(R.id.listview);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         newVM = ViewModelProviders.of(this).get(ViewMyModel.class);
+        Search = (EditText) findViewById(R.id.input);
         populateListView();
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Search.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("RRR",position+"");
-                loadFirst(position+1);
+            public void onTextChanged(CharSequence cs, int arg1, int arg2,
+                                      int arg3) {
+                // When user changed the Text
+                MainActivity.this.adapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
             }
         });
     }
@@ -100,33 +123,29 @@ public class MainActivity extends AppCompatActivity{
 
     private void populateListView() {
         Log.d(TAG, "populateListView: Displaying data in the ListView.");
+        //ArrayList<String> listData = new ArrayList<>();
         newVM.getAllEntity().observe(this, new Observer<List<Entity>>() {
             @Override
             public void onChanged(@Nullable List<Entity> entities) {
                 if(entities != null) {
-                    adapter = new EntityAdapter(getApplicationContext(),  entities);
-                    mListView.setAdapter(adapter);
+                    adapter = new EntityAdapter(getApplicationContext(),  entities, MainActivity.this);
+                    mRecyclerView.setAdapter(adapter);
+                    adapter.sort();
                 }
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             }
         });
     }
-    private void loadFirst(int i) {
-        newVM.getById(i).observe(this, new Observer<Entity>() {
-            @Override
-            public void onChanged(Entity entity) {
-                Intent intent = new Intent(MainActivity.this, AboutPatient.class);
-                intent.putExtra(Form.EXTRA_ID, entity.getId());
-                intent.putExtra(Form.EXTRA_NAME, entity.getName());
-                intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
-                intent.putExtra(Form.EXTRA_AGE, entity.getAge());
-                intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
-                intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
-                intent.putExtra(Form.EXTRA_DATE, entity.getDate());
-                intent.putExtra(Form.EXTRA_TIME, entity.getTime());
-                startActivityForResult(intent, MainActivity.EDIT_REQUEST);
-            }
-        });
-
+    public void loadFirst(Entity entity) {
+        Intent intent = new Intent(MainActivity.this, AboutPatient.class);
+        intent.putExtra(Form.EXTRA_ID, entity.getId());
+        intent.putExtra(Form.EXTRA_NAME, entity.getName());
+        intent.putExtra(Form.EXTRA_PHONE, entity.getPhone());
+        intent.putExtra(Form.EXTRA_AGE, entity.getAge());
+        intent.putExtra(Form.EXTRA_ADDRESS, entity.getAddress());
+        intent.putExtra(Form.EXTRA_DIAGNOSTICS, entity.getDiagnostics());
+        intent.putExtra(Form.EXTRA_DATE, entity.getDate());
+        intent.putExtra(Form.EXTRA_TIME, entity.getTime());
+        startActivityForResult(intent, MainActivity.EDIT_REQUEST);
     }
 }
