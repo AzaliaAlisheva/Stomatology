@@ -114,7 +114,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         entitiesFiltered.sort(new Comparator<Entity>() {
             @Override
             public int compare(Entity e1, Entity e2) {
-                return e1.getName().compareTo(e2.getName());
+                return e1.getName().toLowerCase().compareTo(e2.getName().toLowerCase());
             }
         });
     }

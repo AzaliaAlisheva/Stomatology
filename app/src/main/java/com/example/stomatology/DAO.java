@@ -19,16 +19,16 @@ public interface DAO {
     @Update
     void update(Entity entity);
 
-    @Delete
-    void delete(Entity entity);
+    @Query("DELETE FROM patients_table WHERE id = :id")
+    void delete(int id);
 
     @Query("DELETE FROM patients_table")
     void deleteAllEntities();
 
-    @Query("SELECT * FROM patients_table WHERE ID = :id")
+    @Query("SELECT * FROM patients_table WHERE id = :id")
     LiveData<Entity> getById (int id);
 
-    @Query("SELECT * FROM patients_table WHERE NAME = :name")
+    @Query("SELECT * FROM patients_table WHERE name = :name")
     Cursor getId (String name);
 
     @Query("SELECT * FROM patients_table")

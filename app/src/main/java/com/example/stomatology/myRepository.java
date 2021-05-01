@@ -45,12 +45,12 @@ public class myRepository {
         executorService.shutdown();
     }
 
-    public void delete(final Entity entity) {
+    public void delete(final int id) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                dao.delete(entity);
+                dao.delete(id);
             }
         });
         executorService.shutdown();

@@ -25,8 +25,8 @@ public class ViewMyModel extends AndroidViewModel {
         rep.update(entity);
     }
 
-    public void delete(Entity entity) {
-        rep.delete(entity);
+    public void delete(int id) {
+        rep.delete(id);
     }
 
     public void deleteAllEntities() {

@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,16 +31,25 @@ public class MainActivity extends AppCompatActivity{
     public static final String TAG = "MainActivity";
     public static final int ADD_REQUEST = 1;
     public static final int EDIT_REQUEST = 2;
+    public static final int RESULT_DELETE = 2;
     private ViewMyModel newVM;
     private RecyclerView mRecyclerView;
     private EntityAdapter adapter;
     EditText Search;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar);
-        //FLOATING BUTTON
+
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +129,13 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(this, "Отклонено", Toast.LENGTH_SHORT).show();
             }
         }
-
+        if (resultCode == RESULT_DELETE) {
+            int id = data.getIntExtra(Form.EXTRA_ID, -1);
+            Log.d("ID_MAIN", id+"");
+            if (id != -1) {
+                newVM.delete(id);
+            }
+        }
     }
 
     private void populateListView() {
