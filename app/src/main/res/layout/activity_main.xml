@@ -9,7 +9,7 @@
         android:id="@+id/input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name_hint"
+        android:hint="@string/name_search_hint"
         android:inputType="textVisiblePassword"
         android:autofillHints="" />
     

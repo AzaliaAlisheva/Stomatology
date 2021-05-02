@@ -129,7 +129,16 @@ public class Form extends AppCompatActivity {
         String new_time = editT.getText().toString();
 
         if (new_name.trim().isEmpty()) {
-            Toast.makeText(getBaseContext(), "Напишите ФИО", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Запишите ФИО", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (new_phone.trim().isEmpty()) {
+            Toast.makeText(getBaseContext(), "Запишите телефон", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (new_diagnostics.trim().isEmpty()) {
+            Toast.makeText(getBaseContext(), "Запишите диагноз", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (new_date.trim().isEmpty()) {
+            Toast.makeText(getBaseContext(), "Запишите дату", Toast.LENGTH_SHORT).show();
             return;
         }
 

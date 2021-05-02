@@ -5,12 +5,13 @@
     <string name="hello_world">Hello world!</string>
     <string name="open">Открыть</string>
     <string name="close">Закрыть</string>
-    <string name="name_hint">ФИО</string>
+    <string name="name_search_hint">ФИО</string>
+    <string name="name_hint">ФИО*</string>
     <string name="address_hint">Адрес</string>
     <string name="age_hint">Возраст</string>
-    <string name="phone_hint">Телефон</string>
-    <string name="diagnostics_hint">Диагноз</string>
-    <string name="date_hint">Дата сеанса</string>
+    <string name="phone_hint">Телефон*</string>
+    <string name="diagnostics_hint">Диагноз*</string>
+    <string name="date_hint">Дата сеанса*</string>
     <string name="time_hint">Время сеанса</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
